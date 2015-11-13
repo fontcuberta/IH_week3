@@ -18,13 +18,16 @@ Question.prototype.getId = function(){
 }
 
 
-var question1 = new Question('my real name','virgi');
-var question2 = new Question('my real surname','fernandez');
+var question1 = new Question('my real name?','virgi');
+var question2 = new Question('my real surname?','fernandez');
+var question3 = new Question('where were you born?','madrid');
 var theGame = [];
 theGame.push(question1);
 theGame.push(question2);
+theGame.push(question3);
 
-function questionAll(numQ){
+
+function questionAll(numQ,points){
 	console.log(theGame[numQ].makeQuestion()); //the question
 	prompt.start();
 	prompt.get(['answer'], function (err, result) {
@@ -32,22 +35,31 @@ function questionAll(numQ){
 
   	if ((result.answer === theGame[numQ].getAnswer()) && numQ < theGame.length -1  ) {
   		console.log('CORRECT -- NEXT');
+  		points= points + 1;
   		numQ++;
-  		questionAll(numQ);
+  		console.log("\nyou got " + points + " points")
+  		questionAll(numQ,points);
   	}else if( (result.answer === theGame[numQ].getAnswer()) && numQ === theGame.length -1 ){
 			console.log('CORRECT -- GAME ENDED');
-			return;
+			points+= 1;
+			console.log("\nyou got " + points + " points")
   	}else{
   		console.log('INCORRECT -- TRY AGAIN');
-  		questionAll(numQ);
+  		points-= 1;
+  		console.log("\nyou got " + points + " points")
+  		questionAll(numQ,points);
   	};
 
-
+  	// if (points < 0) {
+  	// 	points = 0;
+  	// };
+  	
 	});
 
 }
 
-questionAll(0); // we begin the game with the first position of the array
+questionAll(0,0); // we begin the game with the first position of the array
+
 
 	// console.log(theGame[1].makeQuestion()); //the question
 
