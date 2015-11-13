@@ -5,6 +5,7 @@ var Question = function(question,answer,points){
 	this.question = question;
 	this.answer = answer;
 	this.points = points;
+	this.bonus = false;
 
 	this.makeQuestion = function(){
 		return this.question;
@@ -31,7 +32,16 @@ theGame.push(question2);
 theGame.push(question3);
 var totalPoints = 0;
 
+function makeRandom(){
+	var randomnumber = Math.floor(Math.random()*theGame.length);
+	theGame[randomnumber].bonus = true;
+}
+
+
 function questionAll(numQ){
+
+makeRandom();
+
 	console.log(theGame[numQ].makeQuestion()); //the question
 	prompt.start();
 	prompt.get(['answer'], function (err, result) {
@@ -39,13 +49,28 @@ function questionAll(numQ){
 
   	if ((result.answer === theGame[numQ].getAnswer()) && numQ < theGame.length -1  ) {
   		console.log('CORRECT -- NEXT');
-  		totalPoints+= theGame[numQ].getPoints();
+
+	  		if (theGame[numQ].bonus === true) {
+	  			totalPoints+= theGame[numQ].getPoints()*2;
+	  		console.log("\nyou got " + totalPoints + " BONUS points!!!!!!");
+	  		}else{
+	  			totalPoints+= theGame[numQ].getPoints();
+	  		};
+
   		numQ++;
   		console.log("\nyou got " + totalPoints + " points")
   		questionAll(numQ);
   	}else if( (result.answer === theGame[numQ].getAnswer()) && numQ === theGame.length -1 ){
 			console.log('CORRECT -- GAME ENDED');
-			totalPoints+= theGame[numQ].getPoints();
+
+				if (theGame[numQ].bonus === true) {
+	  			totalPoints+= theGame[numQ].getPoints()*2;
+	  			console.log("\nyou got " + totalPoints + " BONUS points!!!!!!");
+
+	  		}else{
+	  			totalPoints+= theGame[numQ].getPoints();
+	  		};
+
 			console.log("\nyou got " + totalPoints + " points")
   	}else{
   		console.log('INCORRECT -- TRY AGAIN');
