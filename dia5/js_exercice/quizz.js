@@ -1,9 +1,10 @@
 var prompt = require('prompt');
 
-var Question = function(question,answer){
+var Question = function(question,answer,points){
 	this.id = 0;
 	this.question = question;
 	this.answer = answer;
+	this.points = points;
 
 	this.makeQuestion = function(){
 		return this.question;
@@ -16,18 +17,21 @@ var Question = function(question,answer){
 Question.prototype.getId = function(){
 	return this.id+= 1;
 }
+Question.prototype.getPoints = function(){
+	return this.points;
+}
 
 
-var question1 = new Question('my real name?','virgi');
-var question2 = new Question('my real surname?','fernandez');
-var question3 = new Question('where were you born?','madrid');
+var question1 = new Question('my real name?','virgi',2);
+var question2 = new Question('my real surname?','fernandez',3);
+var question3 = new Question('where were you born?','madrid',5);
 var theGame = [];
 theGame.push(question1);
 theGame.push(question2);
 theGame.push(question3);
+var totalPoints = 0;
 
-
-function questionAll(numQ,points){
+function questionAll(numQ){
 	console.log(theGame[numQ].makeQuestion()); //the question
 	prompt.start();
 	prompt.get(['answer'], function (err, result) {
@@ -35,19 +39,19 @@ function questionAll(numQ,points){
 
   	if ((result.answer === theGame[numQ].getAnswer()) && numQ < theGame.length -1  ) {
   		console.log('CORRECT -- NEXT');
-  		points= points + 1;
+  		totalPoints+= theGame[numQ].getPoints();
   		numQ++;
-  		console.log("\nyou got " + points + " points")
-  		questionAll(numQ,points);
+  		console.log("\nyou got " + totalPoints + " points")
+  		questionAll(numQ);
   	}else if( (result.answer === theGame[numQ].getAnswer()) && numQ === theGame.length -1 ){
 			console.log('CORRECT -- GAME ENDED');
-			points+= 1;
-			console.log("\nyou got " + points + " points")
+			totalPoints+= theGame[numQ].getPoints();
+			console.log("\nyou got " + totalPoints + " points")
   	}else{
   		console.log('INCORRECT -- TRY AGAIN');
-  		points-= 1;
-  		console.log("\nyou got " + points + " points")
-  		questionAll(numQ,points);
+  		totalPoints-= theGame[numQ].getPoints();
+  		console.log("\nyou got " + totalPoints + " points")
+  		questionAll(numQ);
   	};
 
   	// if (points < 0) {
@@ -58,7 +62,7 @@ function questionAll(numQ,points){
 
 }
 
-questionAll(0,0); // we begin the game with the first position of the array
+questionAll(0); // we begin the game with the first position of the array
 
 
 	// console.log(theGame[1].makeQuestion()); //the question
